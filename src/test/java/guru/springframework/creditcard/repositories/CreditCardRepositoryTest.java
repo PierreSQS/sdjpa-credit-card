@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles(profiles = {"local"})
@@ -28,9 +30,10 @@ class CreditCardRepositoryTest {
 
         System.out.println("######## Getting CC-Nr. from database ########");
 
-        CreditCard fetchedCC = creditCardRepository.findById(savedCC.getId()).orElse(null);
+        Optional<CreditCard> fetchedCCOpt = creditCardRepository.findById(savedCC.getId());
 
-        assertThat(savedCC.getCreditCardNumber()).isEqualTo(fetchedCC.getCreditCardNumber());
+        assertThat(fetchedCCOpt).isNotEmpty();
+        assertThat(savedCC.getCreditCardNumber()).isEqualTo(fetchedCCOpt.get().getCreditCardNumber());
 
     }
 }
