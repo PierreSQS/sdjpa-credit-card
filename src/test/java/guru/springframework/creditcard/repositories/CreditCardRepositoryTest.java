@@ -1,6 +1,7 @@
 package guru.springframework.creditcard.repositories;
 
 import guru.springframework.creditcard.domain.CreditCard;
+import guru.springframework.creditcard.services.EncryptionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,9 @@ class CreditCardRepositoryTest {
     @Autowired
     CreditCardRepository creditCardRepository;
 
+    @Autowired
+    EncryptionService encryptionServ;
+
     @Test
     void testSaveAndStoreCreditCard() {
         CreditCard creditCard = new CreditCard();
@@ -29,7 +33,6 @@ class CreditCardRepositoryTest {
         CreditCard savedCC = creditCardRepository.saveAndFlush(creditCard);
 
         System.out.println("######## Getting CC-Nr. from database ########");
-
         Optional<CreditCard> fetchedCCOpt = creditCardRepository.findById(savedCC.getId());
 
         assertThat(fetchedCCOpt).isNotEmpty();
