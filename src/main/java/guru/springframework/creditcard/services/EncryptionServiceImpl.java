@@ -3,7 +3,6 @@ package guru.springframework.creditcard.services;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 
 @Service
@@ -16,6 +15,6 @@ public class EncryptionServiceImpl implements EncryptionService{
 
     @Override
     public String decrypt(String encryptedText) {
-        return Arrays.toString(Base64.getDecoder().decode(encryptedText));
+        return new String(Base64.getDecoder().decode(encryptedText));
     }
 }
