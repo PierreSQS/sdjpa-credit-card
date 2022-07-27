@@ -4,9 +4,7 @@ import guru.springframework.creditcard.domain.CreditCard;
 import guru.springframework.creditcard.services.EncryptionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -16,10 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles(profiles = {"local"})
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = {"guru.springframework.creditcard.interceptors",
-        "guru.springframework.creditcard.services","guru.springframework.creditcard.configuration"})
+@SpringBootTest
 class CreditCardRepositoryTest {
 
     public final static String CREDIT_CARD_NR = "12345678900000";
