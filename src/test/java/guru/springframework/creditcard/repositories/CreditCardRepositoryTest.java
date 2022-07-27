@@ -5,8 +5,10 @@ import guru.springframework.creditcard.services.EncryptionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +25,9 @@ class CreditCardRepositoryTest {
     @Autowired
     EncryptionService encryptionServ;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Test
     void testSaveAndStoreCreditCard() {
         CreditCard creditCard = new CreditCard();
@@ -33,7 +38,21 @@ class CreditCardRepositoryTest {
         CreditCard savedCC = creditCardRepository.saveAndFlush(creditCard);
 
         System.out.println("######## Getting CC-Nr. from database ########");
+        System.out.println(savedCC.getCreditCardNumber());
+        System.out.println("######## Getting CC-Nr. at Rest ########");
+        System.out.println(encryptionServ.encrypt(CREDIT_CARD_NR));
+
         Optional<CreditCard> fetchedCCOpt = creditCardRepository.findById(savedCC.getId());
+
+        Map<String, Object> dbRow = jdbcTemplate.queryForMap("SELECT * FROM credit_card " +
+                "WHERE id="+savedCC.getId());
+
+        String dbCardNr = (String) dbRow.get("credit_card_number");
+
+        assertThat(dbCardNr)
+                .isNotEqualTo(CREDIT_CARD_NR)
+                .isEqualTo(encryptionServ.encrypt(CREDIT_CARD_NR));
+
 
         assertThat(fetchedCCOpt).isNotEmpty();
         assertThat(savedCC.getCreditCardNumber()).isEqualTo(fetchedCCOpt.get().getCreditCardNumber());
